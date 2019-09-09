@@ -118,13 +118,14 @@ function diffOfBiggestAndSmallestDigits(num) {
     let min = Infinity;
     let max = 0;
     while(num >= 1) {
-        if (num%10 > max) {
-            max = num%10
+        let remainder = num%10;
+        if (remainder > max) {
+            max = remainder
         }
-        if (num%10 < min) {
-            min = num%10
+        if (remainder < min) {
+            min = remainder
         }
-        num = (num - num%10)/10;
+        num = (num - remainder)/10;
     }
     return max - min;
 }
