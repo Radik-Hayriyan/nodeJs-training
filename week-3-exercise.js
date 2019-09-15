@@ -62,14 +62,7 @@ console.log(numberOfIntAndString([1, '10', 'hi', 2, 3]));
 // Find sum of each row and print them as an array.
 
 function getSumOfEachRow(array) {
-
-    return array.reduce((arr, current) => {
-        let sum = current.reduce((sum, cur) => {
-            return sum + cur;
-        });
-        arr.push(sum);
-        return arr;
-    }, []);
+    return array.map((o, i, arr) => o.reduce((a, b) => a + b))
 }
 
 console.log(getSumOfEachRow([[3, 4, 5], [1, 0, 0], [4, 5, 4], [8, 8, -1]]));
@@ -80,15 +73,7 @@ console.log(getSumOfEachRow([[3, 4, 5], [1, 0, 0], [4, 5, 4], [8, 8, -1]]));
 // where  removed even numbers, and odd numbers was multiplied with new array length
 
 function removeEvenAndMultipliedOddNumbers(array) {
-
-    let arr = array.reduce((arr, current) => {
-        if (current%2) {
-            arr.push(current)
-        }
-        return arr;
-    }, []);
-
-    return arr.map(o => o*arr.length);
+    return array.filter(o => o%2).map((o, i, arr) => o*arr.length)
 }
 
 console.log(removeEvenAndMultipliedOddNumbers([5, 4, 78, 0, -3, 7]));
