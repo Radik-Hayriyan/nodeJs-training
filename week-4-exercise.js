@@ -290,44 +290,38 @@ let Car = class {
         this.intervalPointer = 0;
     }
 
-    static finishPosition = 50;
+    static finishPosition = 500;
 
     reset() {
         return this.currentPosition = 0;
     }
 
-    stop() {
-        setTimeout(() => { clearInterval(this.interval); console.log(this.name); }, 0);
-        this.reset();
-    }
-};
-
-let carsCompetition = {
     start() {
-        this.interval = setInterval(() => {
-            this.intervalPointer  = (this.intervalPointer*10 + 3)/10;
-            this.currentPosition = this.intervalPointer * this.speed;
+        this.intervalPointer = setInterval(() => {
+            this.currentPosition += this.speed;
             console.log(this.currentPosition);
             if (this.currentPosition >= Car.finishPosition) {
                 this.stop()
             }
-        }, 300);
-    },
+        }, 100);
+    }
+
+    stop() {
+        setTimeout(() => { clearInterval(this.intervalPointer); console.log(this.name); }, 0);
+        this.reset();
+    }
 };
 
-function startCompetition(car1, car2, car3) {
-    if (car1 instanceof Car && car2 instanceof Car && car3 instanceof Car) {
-        carsCompetition.start.call(car1);
-        carsCompetition.start.call(car2);
-        carsCompetition.start.call(car3);
+function startCompetition() {
+    function randomRange(min, max) { // min and max included
+        return Math.floor(Math.random() * (max - min + 1) + min);
     }
+    (new Car('audi', '#00ffff', randomRange(50, 250))).start();
+    (new Car('mercedes', '#ff0000', randomRange(50, 250))).start();
+    (new Car('ERAZ', '#ff66ff', randomRange(50, 250))).start();
 }
 
-let car1 = new Car('audi', '#00ffff', 60);
-let car2 = new Car('mercedes', '#ff0000', 70);
-let car3 = new Car('ERAZ', '#ff66ff', 90);
-
-startCompetition(car1, car2, car3);
+startCompetition();
 
 
 
@@ -342,38 +336,31 @@ let _Car = function(name, color, speed) {
     this.intervalPointer = 0;
 };
 
-_Car.finishPosition = 50;
+_Car.finishPosition = 500;
 _Car.prototype.reset = function() {
     return this.currentPosition = 0;
 };
+_Car.prototype.start = function() {
+    this.intervalPointer = setInterval(() => {
+        this.currentPosition += this.speed;
+        console.log(this.currentPosition);
+        if (this.currentPosition >= Car.finishPosition) {
+            this.stop()
+        }
+    }, 100);
+};
 _Car.prototype.stop = function() {
-    setTimeout(() => { clearInterval(this.interval); console.log(this.name); }, 0);
+    setTimeout(() => { clearInterval(this.intervalPointer); console.log(this.name); }, 0);
     this.reset();
 };
 
-let _carsCompetition = {
-    start() {
-        this.interval = setInterval(() => {
-            this.intervalPointer  = (this.intervalPointer*10 + 3)/10;
-            this.currentPosition = this.intervalPointer * this.speed;
-            console.log(this.currentPosition);
-            if (this.currentPosition >= _Car.finishPosition) {
-                this.stop()
-            }
-        }, 300);
-    },
-};
-
-function _startCompetition(car1, car2, car3) {
-    if (car1 instanceof _Car && _car2 instanceof _Car && _car3 instanceof _Car) {
-        _carsCompetition.start.call(car1);
-        _carsCompetition.start.call(car2);
-        _carsCompetition.start.call(car3);
+function _startCompetition() {
+    function randomRange(min, max) { // min and max included
+        return Math.floor(Math.random() * (max - min + 1) + min);
     }
+    (new Car('audi', '#00ffff', randomRange(50, 250))).start();
+    (new Car('mercedes', '#ff0000', randomRange(50, 250))).start();
+    (new Car('ERAZ', '#ff66ff', randomRange(50, 250))).start();
 }
 
-let _car1 = new _Car('audi', '#00ffff', 60);
-let _car2 = new _Car('mercedes', '#ff0000', 70);
-let _car3 = new _Car('ERAZ', '#ff66ff', 90);
-
-_startCompetition(_car1, _car2, _car3);
+_startCompetition();
