@@ -13,7 +13,6 @@ import {Observable} from "rxjs";
 // promise.then(res => asadasd, err => console.log("doesn't matter")).catch(err => console.log('is working'));
 
 
-
 // exercise 2 - Why catch not work and how to fix?
 //
 // new Promise(function(resolve, reject) {
@@ -30,8 +29,6 @@ import {Observable} from "rxjs";
 //     reject(new Error("Whoops!"));
 //   }, 1000);
 // }).catch(err => console.log(err));
-
-
 
 
 // exercise 3 - You have some 3 async functions. Need to create function which get that
@@ -54,88 +51,69 @@ const async3 = (cb) => {
     }, 3000);
 };
 const someCallback = (val) => console.log(val);
-function myFunc(async1, async2, async3, someCallback) {
-    let res1Check, res2Check, res3Check, res, res1, res2, res3;
-    async1((res) => res1 = res);
-    async2((res) => res2 = res);
-    async3((res) => res3 = res);
-    let interval = setInterval(() => {
-        if (res1 && !res1Check) {
-            res = res1;
-            res1Check = true;
+
+function myFunc() {
+    let result, count = 0, args = arguments;
+
+    function cb(res) {
+        result = res;
+        count++;
+        if (count === 3) {
+            args[args.length - 1](result)
         }
-        if (res2 && !res2Check) {
-            res = res2;
-            res2Check = true;
-        }
-        if (res3 && !res3Check) {
-            res = res3;
-            res3Check = true;
-        }
-        if (res1 && res2 && res3) {
-            clearInterval(interval);
-            someCallback(res);
-        }
-    });
+    }
+
+    for (let i = 0; i < args.length - 1; i++) {
+        args[i](cb)
+    }
 }
 
 myFunc(async1, async2, async3, someCallback);
-
-
 
 
 // exercise 4 - You have some 3 async Promises. create some function (like promise all,race ….)
 // which will get promises and return some promise which will invoked on last finished promise
 // time and will send that last returned value to resolve function, or reject some error on error case
 
-let promise1 = new Promise(function(resolve, reject) {
+let promise1 = new Promise(function (resolve, reject) {
     setTimeout(() => {
         resolve(1)
     }, 4000);
 });
-let promise2 = new Promise(function(resolve, reject) {
+let promise2 = new Promise(function (resolve, reject) {
     setTimeout(() => {
         resolve(13)
     }, 6000);
 });
-let promise3 = new Promise(function(resolve, reject) {
+let promise3 = new Promise(function (resolve, reject) {
     setTimeout(() => {
         resolve(5)
     }, 5000);
 });
 
-function my_func(promise1, promise2, promise3) {
-    let res1Check, res2Check, res3Check, res, res1, res2, res3, error;
-    promise1.then((res) => res1 = res, (err) => error = err);
-    promise2.then((res) => res2 = res, (err) => error = err);
-    promise3.then((res) => res3 = res, (err) => error = err);
-    let interval = setInterval(() => {
-        if (error) {
-            clearInterval(interval);
-            console.log(error)
-        }
-        if (res1 && !res1Check) {
-            res = res1;
-            res1Check = true;
-        }
-        if (res2 && !res2Check) {
-            res = res2;
-            res2Check = true;
-        }
-        if (res3 && !res3Check) {
-            res = res3;
-            res3Check = true;
-        }
-        if (res1 && res2 && res3) {
-            clearInterval(interval);
-            console.log(res);
-        }
-    });
+function my_func() {
+    let result, count = 0, args = arguments;
 
+    function resolve(res) {
+        result = res;
+        count++;
+        if (count === 3) {
+            console.log(result)
+        }
+    }
+
+    function reject(err) {
+        if (err) {
+            console.log(err)
+        }
+    }
+
+    for (let i = 0; i < args.length; i++) {
+        args[i].then(resolve, reject)
+    }
 }
 
 my_func(promise1, promise2, promise3);
-
 
 
 // exercise 5 - You have some 3 async Observables. do same work(like 3 and 4) with observables without using promise(only with observable methods) .
@@ -157,34 +135,26 @@ const obs3 = new Observable(observer => {
     }, 5000);
 });
 
-function _myFunc(obs1, obs2, obs3) {
-    let res1Check, res2Check, res3Check, res, res1, res2, res3, error;
-    obs1.subscribe((res) => res1 = res, (err) => error = err);
-    obs2.subscribe((res) => res2 = res, (err) => error = err);
-    obs3.subscribe((res) => res3 = res, (err) => error = err);
-    let interval = setInterval(() => {
-        if (error) {
-            clearInterval(interval);
-            console.log(error)
-        }
-        if (res1 && !res1Check) {
-            res = res1;
-            res1Check = true;
-        }
-        if (res2 && !res2Check) {
-            res = res2;
-            res2Check = true;
-        }
-        if (res3 && !res3Check) {
-            res = res3;
-            res3Check = true;
-        }
-        if (res1 && res2 && res3) {
-            clearInterval(interval);
-            console.log(res);
-        }
-    });
+function _myFunc() {
+    let result, count = 0, args = arguments;
 
+    function resolve(res) {
+        result = res;
+        count++;
+        if (count === 3) {
+            console.log(result)
+        }
+    }
+
+    function reject(err) {
+        if (err) {
+            console.log(err)
+        }
+    }
+
+    for (let i = 0; i < args.length; i++) {
+        args[i].subscribe(resolve, reject)
+    }
 }
 
 _myFunc(obs1, obs2, obs3);
