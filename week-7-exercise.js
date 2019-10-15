@@ -24,21 +24,39 @@ usersList = [
 
 ];
 
-function createValidation(type) {
-
-    if (type === 'number') {
-        return function(obj) {
-            return obj.info.age > 19;
-        }
-    }
-
-    return function(obj) {
-        return /^[a-zA-Z]+ [a-zA-Z]+$/.test(obj.name);
+function createAgeValidation(func) {
+    return function(obj){
+        return func(obj) > 19;
     }
 }
 
-const ageValidation = createValidation('number');
-const nameValidation = createValidation('');
+function createNameValidation(func) {
+    return function(obj){
+        return /^[a-zA-Z]+ [a-zA-Z]+$/.test(func(obj));
+    }
+}
+
+function propExtractor(key) {
+    return function(object) {
+        return object[key];
+    }
+}
+
+function combine(...funcs) {
+    return function(value) {
+        return funcs.reduce(function(value, func) {
+            return func(value);
+        }, value)
+    }
+}
+
+const getName = propExtractor('name');
+const getInfo = propExtractor('info');
+const getAge = propExtractor('age');
+const getInfoAge = combine(getInfo, getAge);
+const ageValidation = createAgeValidation(getInfoAge);
+const nameValidation = createNameValidation(getName);
+
 console.log(usersList.filter(ageValidation));
 console.log(usersList.filter(nameValidation));
 
